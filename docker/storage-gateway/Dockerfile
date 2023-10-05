@@ -1,11 +1,13 @@
-FROM golang:1.19
-WORKDIR /mnt/homework
+FROM golang:1.21.0-alpine AS builder
+WORKDIR /src/storage-gateway
 COPY . .
-RUN go build ./cmd/object-gateway
+RUN go build ./cmd/storage-gateway
 
-# Docker is used as a base image so you can easily start playing around in the container using the Docker command line client.
-FROM docker
-COPY --from=0 /mnt/homework/object-gateway /usr/local/bin/homework-object-storage
+FROM docker:24.0.0-alpine3.18 AS runner
+
+COPY --from=builder /src/storage-gateway/storage-gateway /opt/storage-gateway/bin/storage-gateway
+COPY --from=builder /src/storage-gateway/config/config.docker.json /opt/storage-gateway/etc/config/
+
 RUN apk add bash curl
 
-ENTRYPOINT ["homework-object-storage"]
+ENTRYPOINT /opt/storage-gateway/bin/storage-gateway -conf /opt/storage-gateway/etc/config/config.docker.json

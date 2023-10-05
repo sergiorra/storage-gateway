@@ -1,0 +1,17 @@
+{
+  "app": {
+    "logLevel": "DEBUG",
+    "shutdownTimeoutInSeconds": 5
+  },
+  "api": {
+    "port": 3000,
+    "timeoutInSeconds": 30,
+    "readHeaderTimeoutInSeconds": 20
+  },
+  "http": {
+    "maxIdleConns": 10,
+    "maxConnsPerHost": 10,
+    "maxIdleConnsPerHost": 10,
+    "timeoutInSeconds": 30
+  }
+}
